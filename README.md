@@ -31,8 +31,7 @@ One row is one certified configuration (year, make, model, drive, transmission, 
 
 ## How I prepared the file
 
-The EPA download has ~80 fields, including older test methods and second-fuel variants. I kept 20 columns the dashboard uses (ids, class, drivetrain, engine, city/highway/combined MPG, CO2, annual fuel cost) and added 3 helper fields. No rows were dropped: 50,242 in, 50,242 out. No imputation, no deduping. The grain is unchanged.
-
+The EPA download has ~80 fields, including older test methods and second-fuel variants. I kept 20 columns the dashboard uses (ids, class, drivetrain, engine, city/highway/combined MPG, CO2, annual fuel cost) and added 3 helper fields. No rows were dropped: 50,242 in, 50,242 out. Missing values were left blank, including cylinders and displacement on EVs. 
 `powertrain_type` is the main derived field. EPA splits that signal across `atvType`, `fuelType`, `fuelType1`, and `phevBlended`, so a plug-in can look electric in one field and gasoline in another. The mapping is a mutually exclusive CASE with EV first so a PHEV cannot fall into EV or Hybrid:
 
 ```sql
@@ -58,7 +57,7 @@ CASE
 END AS powertrain_type
 ```
 
-`make_model` and `vehicle_label` are concatenations for filters and tooltips (`make + model`, `year + make + model`). Those three fields could have been Tableau calculated fields; they live in `data/vehicles_v1.csv` so this repo is the same table the viz is built on.
+`make_model` and `vehicle_label` are concatenations for filters and tooltips (`make + model`, `year + make + model`). Those three fields could have been Tableau calculated fields; they live in `vehicles_v1.csv` so this repo is the same table the viz is built on.
 
 ### In Tableau
 
